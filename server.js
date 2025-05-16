@@ -17,7 +17,7 @@ app.set('view engine','ejs');
 
 //register page rendering
 app.get('/',(req,res)=>{
-    res.render('index');
+    res.render('register');
 })
 
 //register page backend 
@@ -117,10 +117,98 @@ app.get('/logout',(req,res)=>{
 })
 
 //protected route
-app.get('/profile',isLoggedIn,(req,res)=>{
-    console.log(req.user);
-    res.render('profile');
+app.get('/profile',isLoggedIn,async (req,res)=>{
+    const user=await usermodel.findOne({email:req.user.email}).populate('posts');//replaces reference ids with og documents
+    console.log("Info in the profile:",user);
+    res.render('profile',{theuser:user});
 })
+
+app.post('/post',isLoggedIn,async (req,res)=>{
+    try{
+        const {title,content}=req.body;
+        //check if title and content is present
+        if(!title || !content){
+            return res.status(500).send("Please fill all the fields");
+        }
+        //create post
+        const createpost=await postmodel.create({
+            title:title,
+            content:content,
+            username:req.user.userid
+        })
+        console.log("Post created successfully",createpost);
+        const user=await usermodel.findOne({email:req.user.email});
+        user.posts.push(createpost._id);
+        await user.save();
+        return res.status(200).redirect('/profile');
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+
+
+//like feature
+app.get('/like/:id',isLoggedIn,async (req,res)=>{
+    try{
+        const postid=req.params.id;
+        const post=await postmodel.findOne({_id:postid}).populate('username');
+        const userid=req.user.userid;//from is LOgged In
+        //like
+        if(post.likes.indexOf(userid)==-1){
+            post.likes.push(userid);
+        }
+        //unlike
+        else
+        {
+            post.likes.splice(post.likes.indexOf(userid),1);
+        }
+        await post.save();
+        console.log("Post liked successfully",post);
+        res.redirect("/profile#post");
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+//edit route
+app.get('/edit/:id',isLoggedIn,async (req,res)=>{
+    try{
+        const postid=req.params.id;
+        const post=await postmodel.findOne({_id:postid}).populate('username');
+        res.render('edit',{post});
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+//updated the edits 
+app.post('/update/:id',isLoggedIn,async (req,res)=>{
+    try{
+        const postid=req.params.id;
+        const {title,content}=req.body;
+        //check if title and content is present
+        if(!title || !content){
+            return res.status(500).send("Please fill all the fields");
+        }
+        //updated in the mongodb
+        const updatepost=await postmodel.findOneAndUpdate({_id:postid},{
+            title:title,
+            content:content
+        },{new:true});
+
+        console.log("Post updated successfully",updatepost);
+
+        res.redirect('/profile');
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+})
+
 
 //error routes
 app.all('*',(req,res)=>{

@@ -16,7 +16,13 @@ const postSchema=new mongoose.Schema({
     username:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User'
-    }
+    },
+    likes:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        }
+    ]
 })
 
 module.exports=mongoose.model('Post',postSchema);

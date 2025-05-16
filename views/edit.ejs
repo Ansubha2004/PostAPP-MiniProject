@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post App</title>
+    <title>Post App - Edit Post</title>
     <link rel="stylesheet" href="/Stylesheets/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -17,44 +17,16 @@
     <div id="dropbox" class="invisible fixed top-[90px] right-7 min-w-[200px] h-auto border-box p-7 bg-zinc-700 flex flex-col justify-center items-center rounded-lg">
     </div>
     <div class="min-w-screen min-h-screen bg-orange-200 flex flex-col items-center border-box pt-[110px]">
-        <p class="text-[35px] font-[700] text-orange-700">Hello <%= theuser.name %> 👋</p>
+        <p class="text-[35px] font-[700] text-orange-700"> Edit the Post</p>
         <br>
         <div class="max-w-[35%] h-auto border-box p-7 rounded-lg bg-white shadow-[0px_0px_10px_3px_rgba(0,0,0,0.3)]">
-           <form id="fields" method="post" action="/post" class="w-full">
-                <input type="text" name="title" placeholder="Enter title" class="input">
-                <textarea type="text" name="content" placeholder="Enter post content......" class="input resize-none h-[200px]"></textarea>
+           <form id="fields" method="post" action="/update/<%= post._id %>" class="w-full">
+                <input type="text" name="title" placeholder="Enter title" class="input" value="<%= post.title %>">
+                <textarea type="text" name="content" placeholder="Enter post content......" class="input resize-none h-[200px]" ><%= post.content %></textarea>
            </form>
-            <button form="fields" class="rounded-lg text-white bg-orange-700 w-full p-4 my-5 active:scale-[0.95] transition-all linear duration-200" >Create Post</button>    
+            <button form="fields" class="rounded-lg text-white bg-orange-700 w-full p-4 my-5 active:scale-[0.95] transition-all linear duration-200" >Edit The Post</button>    
         </div>
-        <br>
-        <br>
         
-        <% if(theuser.posts.length !== 0) { %>
-        <p class="text-[35px] font-[700] text-orange-700">Your Posts</p>
-        <br>
-        <% } else { %>
-        <p class="text-[35px] font-[700] text-orange-700">You have no posts yet</p>
-        <% } %>
-        <div id="post" class="w-2/3  border-box px-10 flex flex-col gap-5">
-            <% theuser.posts.forEach(function (post) { %>
-                <div class="w-full border-box p-7 h-auto rounded-lg bg-orange-300">
-                    <p>Posted by <span class="text-blue-800">@<%= theuser.username %></span></p>
-                    <p>Date: <%= post.date %></p>
-                    <br>
-                    <p class="text-[30px] text-orange-900"><%= post.title %></p>
-                    <p class="text-zinc-700"><%= post.content %></p>
-                    <br>
-                    <div  class="my-2 text-[12px] text-brown-300 font-bold">
-                        <%= post.likes.length %> likes
-                    </div>
-                    <a href="/like/<%= post._id %>" class="text-[20px] font-bold text-red-500"><%= (post.likes.indexOf(theuser._id)===-1)?"Like":"Unlike" %></a>
-                    <a href="/edit/<%= post._id %>" class="text-[20px] ml-3 font-bold text-red-500">Edit</a>
-                    <a href="/delete" class="text-[20px] ml-3 font-bold text-red-500">Delete</a>
-                </div>
-            <% }) %>
-           
-        </div>
-        <br>
     </div>
     
 </body>

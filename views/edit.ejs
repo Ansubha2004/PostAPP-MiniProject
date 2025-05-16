@@ -13,7 +13,7 @@
         <p class="text-[35px] font-[700] text-orange-700"> Edit the Post</p>
         <br>
         <div class="max-w-[35%] h-auto border-box p-7 rounded-lg bg-white shadow-[0px_0px_10px_3px_rgba(0,0,0,0.3)]">
-           <form id="fields" method="post" action="/update/<%= post._id %>" class="w-full">
+           <form autocomplete="off" id="fields" method="post" action="/update/<%= post._id %>" class="w-full">
                 <input type="text" name="title" placeholder="Enter title" class="input" value="<%= post.title %>">
                 <textarea type="text" name="content" placeholder="Enter post content......" class="input resize-none h-[200px]" ><%= post.content %></textarea>
            </form>

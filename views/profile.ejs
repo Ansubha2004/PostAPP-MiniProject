@@ -10,7 +10,7 @@
 <body>
     <nav class="fixed top-0 w-screen h-[80px] bg-orange-400 flex justify-between items-center border-box px-7">
         <p class="text-[25px] font-[700] text-orange-700">Post Board</p>
-        <form action="/search" method="post"> 
+        <form autocomplete="off" action="/search" method="post"> 
             <input type="text" name="searchaccount" placeholder="Search account by name or username"  class="search" > 
             <button class="p-2 rounded-[5px]  bg-orange-700 text-white hover:scale-[0.95] transition-all duration-200 ease-in-out" >Search</button>
         </form>
@@ -29,7 +29,7 @@
         <p class="text-[35px] font-[700] text-orange-700">Hello <%= theuser.name %> 👋</p>
         <br>
         <div class="max-w-[35%] h-auto border-box p-7 rounded-lg bg-white shadow-[0px_0px_10px_3px_rgba(0,0,0,0.3)]">
-           <form id="fields" method="post" action="/post" class="w-full">
+           <form autocomplete="off" id="fields" method="post" action="/post" class="w-full">
                 <input type="text" name="title" placeholder="Enter title" class="input">
                 <textarea type="text" name="content" placeholder="Enter post content......" class="input resize-none h-[200px]"></textarea>
            </form>

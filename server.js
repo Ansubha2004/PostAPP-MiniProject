@@ -9,6 +9,7 @@ const usermodel=require('./models/user');
 const postmodel=require('./models/post');
 const isLoggedIn=require('./middleware/isLoggedIn');
 
+
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));   
 app.use(express.static(path.join(__dirname,'public')));

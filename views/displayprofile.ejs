@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post App</title>
+    <title>Post App- <%= account.name %></title>
     <link rel="stylesheet" href="/Stylesheets/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
-    <nav class="fixed top-0 w-screen h-[80px] bg-orange-400 flex justify-between items-center border-box px-7">
+    <nav class="w-screen h-[80px] bg-orange-300 flex justify-between items-center border-box px-7">
         <p class="text-[25px] font-[700] text-orange-700">My Posting App</p>
-        <form action="/search" method="post"> 
-            <input type="text" name="searchaccount" placeholder="Search account by name or username"  class="search" > 
-            <button class="p-2 rounded-[5px]  bg-orange-700 text-white hover:scale-[0.95] transition-all duration-200 ease-in-out" >Search</button>
-        </form>
         <span class="flex justify-center items-center gap-7">
+            <a href="/profile" class="text-[20px] font-[500] text-orange-700 hover:scale-[1.05] transition-all duration-200">My Profile</a>
             <a href="/deleteaccount/<%= theuser._id %>" class="text-[20px] font-[500] text-orange-700 hover:scale-[1.05] transition-all duration-200">Delete Account</a>
             <a href="/logout" class="text-[20px] font-[500] text-orange-700 hover:scale-[1.05] transition-all duration-200">Log out</a>
             <div id="profilebox" class="overflow-hidden h-[50px] w-[50px] rounded-[50%] bg-white border-solid border-[2px] border-transparent hover:border-orange-900 active:scale-[0.9]  transition-all duration-200 ease-in-out">
@@ -25,29 +22,20 @@
     </nav>
     <div id="dropbox" class="invisible fixed top-[90px] right-7 min-w-[200px] h-auto border-box p-7 bg-zinc-700 flex flex-col justify-center items-center rounded-lg">
     </div>
-    <div class="min-w-screen min-h-screen bg-orange-200 flex flex-col items-center border-box pt-[110px]">
-        <p class="text-[35px] font-[700] text-orange-700">Hello <%= theuser.name %> 👋</p>
-        <br>
-        <div class="max-w-[35%] h-auto border-box p-7 rounded-lg bg-white shadow-[0px_0px_10px_3px_rgba(0,0,0,0.3)]">
-           <form id="fields" method="post" action="/post" class="w-full">
-                <input type="text" name="title" placeholder="Enter title" class="input">
-                <textarea type="text" name="content" placeholder="Enter post content......" class="input resize-none h-[200px]"></textarea>
-           </form>
-            <button form="fields" class="rounded-lg text-white bg-orange-700 w-full p-4 my-5 active:scale-[0.95] transition-all linear duration-200" >Create Post</button>    
-        </div>
-        <br>
-        <br>
+    <div class="min-w-screen min-h-screen h-auto flex justify-center items-center bg-orange-200 flex flex-col items-center border-box ">
         
-        <% if(theuser.posts.length !== 0) { %>
-        <p class="text-[35px] font-[700] text-orange-700 pt-[110px]">Your Posts</p>
+        
+        <% if(account.posts.length !== 0) { %>
+        <br>
+        <p class="text-[35px] font-[700] text-orange-700"><%= account.name %>'s Posts</p>
         <br>
         <% } else { %>
         <p class="text-[35px] font-[700] text-orange-700">You have no posts yet</p>
         <% } %>
         <div  class="w-2/3  border-box px-10 flex flex-col gap-5">
-            <% theuser.posts.forEach(function (post) { %>
+            <% account.posts.forEach(function (post) { %>
                 <div id="post<%= post._id %>" class="w-full border-box p-7 h-auto rounded-lg bg-orange-300">
-                    <p>Posted by <span class="text-blue-800">@<%= theuser.username %></span></p>
+                    <p>Posted by <span class="text-blue-800">@<%= account.username %></span></p>
                     <p>Date: <%= post.date %></p>
                     <br>
                     <p class="text-[30px] text-orange-900"><%= post.title %></p>
@@ -57,14 +45,14 @@
                         <%= post.likes.length %> likes
                     </div>
                     <a href="/like/<%= post._id %>" class="text-[20px] font-bold text-red-500"><%= (post.likes.indexOf(theuser._id)===-1)?"Like":"Unlike" %></a>
-                    <a href="/edit/<%= post._id %>" class="text-[20px] ml-3 font-bold text-red-500">Edit</a>
-                    <a href="/delete/<%= post._id %>" class="text-[20px] ml-3 font-bold text-red-500">Delete</a>
                 </div>
             <% }) %>
            
         </div>
         <br>
     </div>
+    
+    
     
 </body>
 </html>

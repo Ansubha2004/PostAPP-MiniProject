@@ -123,6 +123,8 @@ app.get('/profile',isLoggedIn,async (req,res)=>{
     res.render('profile',{theuser:user});
 })
 
+//create post
+
 app.post('/post',isLoggedIn,async (req,res)=>{
     try{
         const {title,content}=req.body;
@@ -140,7 +142,7 @@ app.post('/post',isLoggedIn,async (req,res)=>{
         const user=await usermodel.findOne({email:req.user.email});
         user.posts.push(createpost._id);
         await user.save();
-        return res.status(200).redirect('/profile');
+        return res.status(200).redirect('/profile#post'+createpost._id);
     }
     catch(err){
         console.log(err);
@@ -166,12 +168,16 @@ app.get('/like/:id',isLoggedIn,async (req,res)=>{
         }
         await post.save();
         console.log("Post liked successfully",post);
-        res.redirect("/profile#post");
+        //redirect to previous page
+        const previouspage=req.get('referer');
+        res.redirect(previouspage+'#post'+postid);
+
     }
     catch(err){
         console.log(err);
     }
 })
+
 
 //edit route
 app.get('/edit/:id',isLoggedIn,async (req,res)=>{
@@ -246,6 +252,45 @@ app.get('/deleteaccount/:id',isLoggedIn,async (req,res)=>{
             //logout
             res.redirect('/logout');
         }
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+})
+
+//display profile
+app.get('/displayprofile/:id',isLoggedIn,async (req,res)=>{
+    try{    
+        const user=await usermodel.findOne({email:req.user.email}).populate('posts');
+        console.log("Info in the display profile:",user);
+        const checkaccount=await usermodel.findOne({_id:req.params.id}).populate('posts');
+        res.render('displayprofile',{account:checkaccount,theuser:user});
+        
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+})
+
+//serach accounts
+app.post('/search',isLoggedIn,async (req,res)=>{
+    try{
+        const searchaccount=req.body.searchaccount;
+        //check if search account is present
+        const checkaccount=await usermodel.findOne({
+            $or:[
+                {username:searchaccount},
+                {name:searchaccount}
+            ]
+        }).populate('posts');
+        if(!checkaccount)
+        {
+            return res.status(500).send("Account not found");
+        }
+        console.log("Account found successfully",checkaccount);
+       res.redirect('/displayprofile/'+checkaccount._id);
     }
     catch(err)
     {

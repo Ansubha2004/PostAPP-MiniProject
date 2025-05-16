@@ -227,6 +227,32 @@ app.get('/delete/:id',isLoggedIn,async (req,res)=>{
 
 })
 
+//delete account
+app.get('/deleteaccount/:id',isLoggedIn,async (req,res)=>{
+    try{
+        const userid=req.params.id;
+        const user=await usermodel.findOne({_id:userid}).populate('posts');
+        if(user)
+        {
+            //delete all posts
+            user.posts.forEach(async (post)=>{
+                await postmodel.deleteOne({_id:post._id});
+            })
+            console.log("Posts deleted successfully");
+            //delete user
+            await usermodel.deleteOne({_id:userid});
+            console.log("User deleted successfully");
+
+            //logout
+            res.redirect('/logout');
+        }
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+})
+
 //error routes
 app.all('*',(req,res)=>{
     res.status(404).send("Page not found");

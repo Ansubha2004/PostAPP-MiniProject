@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post App- <%= account.name %></title>
+    <title>Post Board- <%= account.name %></title>
     <link rel="stylesheet" href="/Stylesheets/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
     <nav class="w-screen h-[80px] bg-orange-300 flex justify-between items-center border-box px-7">
-        <p class="text-[25px] font-[700] text-orange-700">My Posting App</p>
+        <p class="text-[25px] font-[700] text-orange-700">Post Board</p>
         <span class="flex justify-center items-center gap-7">
             <a href="/profile" class="text-[20px] font-[500] text-orange-700 hover:scale-[1.05] transition-all duration-200">My Profile</a>
             <a href="/deleteaccount/<%= theuser._id %>" class="text-[20px] font-[500] text-orange-700 hover:scale-[1.05] transition-all duration-200">Delete Account</a>

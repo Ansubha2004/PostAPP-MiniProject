@@ -113,7 +113,7 @@ app.post('/login', async (req,res)=>{
 //logout
 app.get('/logout',(req,res)=>{
     res.cookie('Token',"");
-    res.redirect('/');
+    res.redirect('/login');
 })
 
 //protected route

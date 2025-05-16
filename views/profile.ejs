@@ -49,7 +49,7 @@
                     </div>
                     <a href="/like/<%= post._id %>" class="text-[20px] font-bold text-red-500"><%= (post.likes.indexOf(theuser._id)===-1)?"Like":"Unlike" %></a>
                     <a href="/edit/<%= post._id %>" class="text-[20px] ml-3 font-bold text-red-500">Edit</a>
-                    <a href="/delete" class="text-[20px] ml-3 font-bold text-red-500">Delete</a>
+                    <a href="/delete/<%= post._id %>" class="text-[20px] ml-3 font-bold text-red-500">Delete</a>
                 </div>
             <% }) %>
            

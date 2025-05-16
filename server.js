@@ -209,6 +209,23 @@ app.post('/update/:id',isLoggedIn,async (req,res)=>{
     }
 })
 
+//delete post
+app.get('/delete/:id',isLoggedIn,async (req,res)=>{
+    try
+    {
+        const postId=req.params.id;
+        const post=await postmodel.deleteOne({_id:postId});
+        console.log("Post deleted successfully",post);
+
+        res.redirect('/profile');
+
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+
+})
 
 //error routes
 app.all('*',(req,res)=>{

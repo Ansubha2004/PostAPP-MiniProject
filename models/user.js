@@ -1,7 +1,8 @@
 const mongoose=require('mongoose');
+const dotenv=require('dotenv');
+require("dotenv").config();
 
-
-mongoose.connect("mongodb://localhost:27017/MiniProject-PostApp");
+mongoose.connect(process.env.MONGODB);
 
 const userSchema= new mongoose.Schema({
     name:{

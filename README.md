@@ -11,6 +11,7 @@ A full-stack social media-like application where users can sign up, log in, crea
   - Sign Up / Log In with JWT & Cookies
   - Log Out securely
   - Delete Account
+  - Receive mail for every action
 
 - 📝 **Post Functionality**
 

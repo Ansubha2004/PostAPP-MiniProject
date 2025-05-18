@@ -8,13 +8,17 @@ const ejs=require('ejs');
 const usermodel=require('./models/user');
 const postmodel=require('./models/post');
 const isLoggedIn=require('./middleware/isLoggedIn');
-
+const dotenv=require('dotenv');
+require('dotenv').config();
+const sendmail=require('./utility/mail');
 
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));   
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
 app.set('view engine','ejs');
+
+
 
 //register page rendering
 app.get('/',(req,res)=>{
@@ -50,9 +54,12 @@ app.post('/register', async (req,res)=>{
             console.log("Registered user details: ",createuser) ;
 
             //token generation-cookie
-            const token=jwt.sign({email,userid:createuser._id},"ansubha ka secret key");
+            const token=jwt.sign({email,userid:createuser._id},process.env.SECRETKEY);
             res.cookie('Token',token);
             console.log("Token created successfully",token);
+
+            //send mail
+            await sendmail(email,"Congrates "+name+"! Registration Successful ","Hi "+name+",\n\n\nThank you for registering with POST BOARD. Your account has been successfully created. You can now log in using your email and password. If you did not initiate this registration, please contact us immediately. \n\n\nBest regards,\nTeam Post Board");
 
             res.redirect('/login');
         })
@@ -89,9 +96,13 @@ app.post('/login', async (req,res)=>{
             if(result)
             {
                 //token generation-cookie
-                const token=jwt.sign({email,userid:finddata._id},"ansubha ka secret key");
+                const token=jwt.sign({email,userid:finddata._id},process.env.SECRETKEY);
                 res.cookie('Token',token);
                 console.log("Token created successfully",token);
+
+                //send mail
+                sendmail(email,"Congrates "+finddata.name+"! Log In Successful ","Hey "+finddata.name+",\n\n\nYour have successfully logged in to your account: "+finddata.username+". If you did not initiate this login, please contact us immediately. \n\n\nBest regards,\nTeam Post Board");
+
 
                 res.redirect("/profile");
             }
@@ -112,8 +123,14 @@ app.post('/login', async (req,res)=>{
 
 
 //logout
-app.get('/logout',(req,res)=>{
+app.get('/logout',isLoggedIn,async (req,res)=>{
+
+    //send mail
+    const finddata=await usermodel.findOne({email:req.user.email});
+    await sendmail(finddata.email,"Oops "+finddata.name+"! You have looged out ","Hey "+finddata.name+",\n\n\nYour have successfully  logged out from your account: "+finddata.username+". If you did not initiate this log out , please contact us immediately. \n\n\nBest regards,\nTeam Post Board");
+
     res.cookie('Token',"");
+    
     res.redirect('/login');
 })
 
@@ -250,6 +267,7 @@ app.get('/deleteaccount/:id',isLoggedIn,async (req,res)=>{
             await usermodel.deleteOne({_id:userid});
             console.log("User deleted successfully");
 
+
             //logout
             res.redirect('/logout');
         }
@@ -305,6 +323,6 @@ app.all('*',(req,res)=>{
 })
 
 //port
-app.listen(2929,()=>{
-    console.log("Server started on port 2929");
+app.listen(process.env.PORT,()=>{
+    console.log("Server started on port "+process.env.PORT);
 })
